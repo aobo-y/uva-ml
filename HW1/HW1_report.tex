@@ -1,6 +1,9 @@
 \documentclass[11pt]{article}
 
 \usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{subcaption}
+
 \newcommand{\numpy}{{\tt numpy}}    % tt font for numpy
 
 \topmargin -.5in
@@ -162,6 +165,67 @@ Yes, $B$ is orthogonal matrix because $B^TB=I$
 1.13
 
 $$ \frac{\partial (y^TAy)}{\partial y} = y^T(A + A^T)$$
+
+
+\item
+Linear Regression Model Fitting
+
+2.2
+
+The learned theta of the Normal Equation is $[3.0077,\, 1.6953]$, whose line is shown in Figure \ref{fig:ne}.
+
+\begin{figure}[!h]
+    \centering
+    \begin{subfigure}[b]{0.4\linewidth}
+      \includegraphics[width=\linewidth]{figures/normal.png}
+    \end{subfigure}
+    \caption{Normal Equation}
+    \label{fig:ne}
+\end{figure}
+
+The learned Theta of the Gradient Descent is $[3.0202,\, 1.6715]$, whose line and loss are shown in Figure \ref{fig:gd}.
+
+\begin{figure}[!h]
+    \centering
+    \begin{subfigure}[b]{0.4\linewidth}
+      \includegraphics[width=\linewidth]{figures/gd.png}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.4\linewidth}
+      \includegraphics[width=\linewidth]{figures/gd_loss.png}
+    \end{subfigure}
+    \caption{Gradient Descent}
+    \label{fig:gd}
+\end{figure}
+
+The learned Theta of the Stochiastic Gradient Descent is $[3.0197,\, 1.6720]$, whose line and loss are shown in Figure \ref{fig:sgd}.
+
+
+\begin{figure}[!h]
+    \centering
+    \begin{subfigure}[b]{0.4\linewidth}
+      \includegraphics[width=\linewidth]{figures/sgd.png}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.4\linewidth}
+      \includegraphics[width=\linewidth]{figures/sgd_loss.png}
+    \end{subfigure}
+    \caption{Stochiastic Gradient Descent}
+    \label{fig:sgd}
+\end{figure}
+
+The learned Theta of the Minibatch Gradient Descent is $[3.0204,\, 1.6716]$, whose line and loss are shown in Figure \ref{fig:bsgd}.
+
+
+\begin{figure}[!h]
+    \centering
+    \begin{subfigure}[b]{0.4\linewidth}
+      \includegraphics[width=\linewidth]{figures/bsgd.png}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.4\linewidth}
+      \includegraphics[width=\linewidth]{figures/bsgd_loss.png}
+    \end{subfigure}
+    \caption{Minibatch Gradient Descent}
+    \label{fig:bsgd}
+\end{figure}
 
 % ========== Continue adding items as needed
 
