@@ -21,13 +21,13 @@ if __name__ == "__main__":
         sys.exit()
     x = np.random.uniform(-10, 10, num_to_generate) # generate x value
     y = 0.05*np.power(x, 5) - 5*np.power(x, 3) + 10*np.power(x, 2) - 5*x - 39 + np.random.normal(0.0, 100, num_to_generate) # using an underlying "true" data distribution and some gaussian noise this generates ys given xs
-    
+
     scx = preprocessing.StandardScaler()
     x = x.reshape((x.shape[0],1))
     scx.fit(x)
     x = scx.transform(x)
     x = x.reshape((x.shape[0]))
-   
+
     plot(x, y)
     file = open("dataPoly.txt","w") # write x and y tab seperated to a file
     for elem in list(zip(x, y)):

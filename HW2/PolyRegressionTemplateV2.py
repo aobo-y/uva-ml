@@ -76,6 +76,7 @@ def plot_epoch_losses(x_train, x_test, y_train, y_test, best_thetas, title):
     plt.plot(epochs, tslosses, label="testing_loss")
     plt.xlabel("epoch")
     plt.ylabel("loss")
+    plt.legend()
     plt.title(title)
     plt.show()
 
@@ -196,7 +197,6 @@ def select_hyperparameter(degrees, x_train, y_train):
 
     x_train_p = increase_poly_order(x_train, best_degree)
     best_theta = normal_equation(x_train_p, y_train)
-    print(best_theta)
     return best_degree, best_theta
 
 
@@ -271,18 +271,25 @@ if __name__ == "__main__":
     print('best_dgree:', best_degree)
     x_train_p = increase_poly_order(x_train, best_degree)
     x_test_p = increase_poly_order(x_test, best_degree)
-    gbest_thetas = gradient_descent(x_train_p, y_train, 0.005, 2000)
+    gbest_thetas = gradient_descent(x_train_p, y_train, 0.005, 1000)
 
     best_fit_plot(x_train, y_train, gbest_thetas[-1], best_degree)
     plot_epoch_losses(x_train_p, x_test_p, y_train, y_test, gbest_thetas, "best learned theta - train, test losses vs. GD epoch ")
 
+    # use degree 2
+    x_train_p = increase_poly_order(x_train, 2)
+    x_test_p = increase_poly_order(x_test, 2)
+    gbest_thetas = gradient_descent(x_train_p, y_train, 0.005, 1000)
+
+    best_fit_plot(x_train, y_train, gbest_thetas[-1], 2)
+    plot_epoch_losses(x_train_p, x_test_p, y_train, y_test, gbest_thetas, "degree 2 - train, test losses vs. GD epoch ")
 
     ##################################################################
     # Part 4: analyze the effect of revising the size of train data:
     # Show training error and testing error by varying the number for training samples
     x, y = load_data_set("dataPoly.txt")
     x = increase_poly_order(x, 8)
-    example_num = [10*i for i in range(2, 21)] # python list comprehension
+    example_num = [10*i for i in range(1, 10)] # python list comprehension
     training_losses, testing_losses = get_loss_per_num_examples(x, y, example_num, 0.5)
 
     plt.plot(example_num, training_losses, label="training_loss")
