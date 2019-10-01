@@ -213,6 +213,54 @@ The learned $\beta$ is shown in Figure \ref{fig:beta}. Comparing with the underl
 \medskip
 
 The gradient descent is also implemented for the ridge regression. The first 5 values of such learned beta is $[1.28730024,\, 5.00181111,\, 0.38442863,\, 0.04989323,\, 0.10607296]$, which closely matches the values learned in normal equation $[1.40916206,\, 5.00157608,\, 0.44139893,\, 0.00755006,\, 0.09740131]$. Moreover, the loss and the norm of the gradient descent $\beta$ are $4.6289$ and $6.2333$ which is almost the same with the ones of nomral equation reported above.
+
+\item
+Sample Questions
+
+\medskip
+
+3.1
+
+It is not a good set of basis functions, because they do not overlap to cover all points. For example, when $x=4$, no matter what $\beta$ is, $y$ can only be $0$.
+
+\medskip
+
+3.2
+
+The three points are $[1, 1],\, [2, 4],\, [3, 9]$.
+
+Leave $[1,1]$ out, we have
+$$
+4 = 2\beta_{1} + 4\beta_{2},\;
+9 = 3\beta_{1} + 9\beta_{2}
+$$
+$$
+\beta_{1} = 0,\; \beta_{2} = 1
+$$
+The validation loss is $0$
+
+Leave $[2,4]$ out, we have
+$$
+1 = \beta_{1} + \beta_{2},\;
+9 = 3\beta_{1} + 9\beta_{2}
+$$
+$$
+\beta_{1} = 0,\; \beta_{2} = 1
+$$
+The validation loss is $0$
+
+Leave $[3,9]$ out, we have
+$$
+1 = \beta_{1} + \beta_{2},\;
+4 = 2\beta_{1} + 4\beta_{2}
+$$
+$$
+\beta_{1} = 0,\; \beta_{2} = 1
+$$
+The validation loss is $0$
+
+So overall, the mean squared LOOCV error is $0$
+
 % ========== Continue adding items as needed
 
 \end{enumerate}
