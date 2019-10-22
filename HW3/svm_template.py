@@ -85,23 +85,21 @@ def train_and_select_model(training_csv):
     x_train, y_train = load_data(training_csv)
     # hard code hyperparameter configurations, an example:
     param_set = [
-        # {'kernel': 'linear', 'C': 1},
+        {'kernel': 'linear', 'C': 1},
         {'kernel': 'linear', 'C': 10},
         {'kernel': 'linear', 'C': 100},
         {'kernel': 'linear', 'C': 1000},
-        # {'kernel': 'rbf', 'C': .5},
-        # {'kernel': 'rbf', 'C': 1},
-        # {'kernel': 'rbf', 'C': 2},
-        # {'kernel': 'rbf', 'C': 5},
-        # {'kernel': 'rbf', 'C': 10},
-        # {'kernel': 'rbf', 'C': 50},
-        # {'kernel': 'rbf', 'C': 100},
-        # {'kernel': 'rbf', 'C': 500},
-        # {'kernel': 'rbf', 'C': 1000},
-        # {'kernel': 'poly', 'C': 1, 'degree': 1},
-        # {'kernel': 'poly', 'C': 1, 'degree': 3},
-        # {'kernel': 'poly', 'C': 1, 'degree': 5},
-        # {'kernel': 'poly', 'C': 1, 'degree': 7},
+
+        {'kernel': 'rbf', 'C': .1},
+        {'kernel': 'rbf', 'C': 1},
+        {'kernel': 'rbf', 'C': 10},
+        {'kernel': 'rbf', 'C': 100},
+        {'kernel': 'rbf', 'C': 1000},
+
+        {'kernel': 'poly', 'C': 1, 'degree': 1},
+        {'kernel': 'poly', 'C': 1, 'degree': 3},
+        {'kernel': 'poly', 'C': 1, 'degree': 5},
+        {'kernel': 'poly', 'C': 1, 'degree': 7},
     ]
     # your code here
     # iterate over all hyperparameter configurations
@@ -125,7 +123,7 @@ def train_and_select_model(training_csv):
 
         trn_accuracy = sum(trn_fold_accuracy) / nfolds
         val_accuracy = sum(val_fold_accuracy) / nfolds
-        print(param, 'trn accuracy:', trn_accuracy, 'val accuracy:', val_accuracy)
+        print(param, 'trn accuracy: %.4f' % trn_accuracy, 'val accuracy: %.4f' % val_accuracy)
 
         if val_accuracy > best_score:
             best_score = val_accuracy
@@ -160,7 +158,7 @@ if __name__ == '__main__':
     # cross validation to select hyperparameters as well as cross validation score for best hyperparameter.
     # hardcode hyperparameter configurations as part of train_and_select_model(training_csv)
     trained_model, cv_score = train_and_select_model(training_csv)
-    exit()
+
     print('The best model was scored %.2f' % cv_score)
     # use trained SVC model to generate predictions
     predictions = predict(testing_csv, trained_model)
