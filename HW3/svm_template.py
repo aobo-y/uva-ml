@@ -35,14 +35,17 @@ def load_data(csv_file_path):
     global le, ohe, ss
 
     # your code here
-    df = pandas.read_csv(csv_file_path, sep=', ', names=col_names_x+col_names_y, engine='python')
+    df = pandas.read_csv(csv_file_path, sep=', ', names=col_names_x+col_names_y)
 
     if not le:
         le = LabelEncoder()
         le.fit(['<=50K', '>50K'])
     y = le.transform(df[col_names_y[0]].values)
 
-    x_cat = df[categorical_cols].values
+    # rm feature native-country
+    filtered_cat_cols = categorical_cols[:-1]
+
+    x_cat = df[filtered_cat_cols].values
     if not ohe:
         ohe = OneHotEncoder(sparse=False, handle_unknown='ignore')
         ohe.fit(x_cat)
