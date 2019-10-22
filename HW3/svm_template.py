@@ -35,7 +35,7 @@ def load_data(csv_file_path):
     global le, ohe, ss
 
     # your code here
-    df = pandas.read_csv(csv_file_path, sep=', ', names=col_names_x+col_names_y)
+    df = pandas.read_csv(csv_file_path, sep=', ', names=col_names_x+col_names_y, engine='python')
 
     if not le:
         le = LabelEncoder()
@@ -90,19 +90,19 @@ def train_and_select_model(training_csv):
     param_set = [
         {'kernel': 'linear', 'C': 1},
         {'kernel': 'linear', 'C': 10},
-        {'kernel': 'linear', 'C': 100},
-        {'kernel': 'linear', 'C': 1000},
+        # {'kernel': 'linear', 'C': 100},
+        # {'kernel': 'linear', 'C': 1000},
 
-        {'kernel': 'rbf', 'C': .1},
+        # {'kernel': 'rbf', 'C': .1},
         {'kernel': 'rbf', 'C': 1},
         {'kernel': 'rbf', 'C': 10},
         {'kernel': 'rbf', 'C': 100},
-        {'kernel': 'rbf', 'C': 1000},
+        # {'kernel': 'rbf', 'C': 1000},
 
         {'kernel': 'poly', 'C': 1, 'degree': 1},
         {'kernel': 'poly', 'C': 1, 'degree': 3},
         {'kernel': 'poly', 'C': 1, 'degree': 5},
-        {'kernel': 'poly', 'C': 1, 'degree': 7},
+        # {'kernel': 'poly', 'C': 1, 'degree': 7},
     ]
     # your code here
     # iterate over all hyperparameter configurations
