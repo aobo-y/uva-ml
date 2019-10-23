@@ -90,19 +90,19 @@ def train_and_select_model(training_csv):
     param_set = [
         {'kernel': 'linear', 'C': 1},
         {'kernel': 'linear', 'C': 10},
-        # {'kernel': 'linear', 'C': 100},
-        # {'kernel': 'linear', 'C': 1000},
+        {'kernel': 'linear', 'C': 100},
 
-        # {'kernel': 'rbf', 'C': .1},
         {'kernel': 'rbf', 'C': 1},
         {'kernel': 'rbf', 'C': 10},
         {'kernel': 'rbf', 'C': 100},
-        # {'kernel': 'rbf', 'C': 1000},
+        {'kernel': 'rbf', 'C': 1000},
 
         {'kernel': 'poly', 'C': 1, 'degree': 1},
         {'kernel': 'poly', 'C': 1, 'degree': 3},
         {'kernel': 'poly', 'C': 1, 'degree': 5},
-        # {'kernel': 'poly', 'C': 1, 'degree': 7},
+        {'kernel': 'poly', 'C': 10, 'degree': 1},
+        {'kernel': 'poly', 'C': 10, 'degree': 3},
+        {'kernel': 'poly', 'C': 10, 'degree': 5},
     ]
     # your code here
     # iterate over all hyperparameter configurations
@@ -163,6 +163,7 @@ if __name__ == '__main__':
     trained_model, cv_score = train_and_select_model(training_csv)
 
     print('The best model was scored %.2f' % cv_score)
+    exit()
     # use trained SVC model to generate predictions
     predictions = predict(testing_csv, trained_model)
     # Don't archive the files or change the file names for the automated grading.
