@@ -109,3 +109,6 @@ venv.bak/
 *.gz
 *.fdb_latexmk
 *.out
+
+# HW4
+HW4/fashion_data2student
