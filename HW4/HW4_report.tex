@@ -197,19 +197,103 @@ As shown in Firgure \ref{fig:spiral_nn}, I achieved test loss of $0.09$ on spira
 \item
 Deep Learning with Keras
 
-The 3-fold cross-validation accuracies of different hyperparameters are shown in the table below.
+2.3 MLP
+\medskip
+
+The summary of the MLP model is shown in Firgure \ref{fig:mlp_summary}. The model includes three fully connected layers whose dimensions are $28*28-14*14-7*7-10$. The activation function used betwen the hidden layers is ReLU and a Softmax layer is appended to the end. It is trained by SGD with learning rate of $0.01$, momentum of $0.9$, and nesterov. The loss to minimize is the categorical crossentropy. This model is capable to take a flattened $28*28$ pixel tensor as input and output the predicted probabilities of $10$ target classes.
+
+The loss and accurary plots are shown in Figure \ref{fig:mlp_plot}. I don't think these plots prove any problems in my model or epochs. Although both the testing loss and accuracy fluctuate in the middle, the general trend of the testing loss is decreasing and the accurary is also inceeasing, so I beleive it has not overfitted yet. Based on the plateau at the tail, the model should have converged.
+
+Firgure \ref{fig:mlp_weights} is the weights visualization. Based the outlines, these two units are likely responsiblie for capturing features for a dress or shirt. According to the bring areas, they focuses on detecting the shoulder and sleeves.
+
+MSE is for sure not a good choice because this is classfication task instead of regression. The labels are not continuous but categorical.
+
+
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[width=0.8\linewidth]{figures/mlp/summary.png}
+  \caption{MLP Summary}
+  \label{fig:mlp_summary}
+\end{figure}
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[width=0.4\linewidth]{figures/mlp/plot.png}
+  \caption{MLP Plot}
+  \label{fig:mlp_plot}
+\end{figure}
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[width=0.4\linewidth]{figures/mlp/weights.png}
+  \caption{MLP Weights}
+  \label{fig:mlp_weights}
+\end{figure}
+
+2.4 CNN
+\medskip
+
+
+The summary of the CNN model is shown in Firgure \ref{fig:cnn_summary}. The model can be divided into $3$ block. The first block has two convolution layers with $16$ filter and kernel size of $3$. Then a max pool with kernel size of $2$ is appended and there is a dropout layer for training. The second block has two convolution layers with $32$ filter and kernel size of $3$. A same max pool and dropout layer are appended. The third block includes a flatten layer and $2$ fully connected dense layers with size of $512-10$. All the activation function in between is ReLU and a Softmax layer is appended to the end. It is trained by SGD with learning rate of $0.01$, momentum of $0.9$, and nesterov. The loss to minimize is the categorical crossentropy. This model is capable to take a $28*28$ pixel tensor as input and output the predicted probabilities of $10$ target classes.
+
+The loss and accurary plots are shown in Figure \ref{fig:cnn_plot}. Based on the trend at the end, the model may start to get overfitted. It is better to stop one epoch earlier. Because I add two dropout layers during training, it is normal that both the validation loss and accuracy are better the training.
+
+It outputs $16$ matrices. The dimension is $26*26$.
+
+In order to achieve better performance, I add another convolution layer into the original 1st layer and the 1st max pool. The original dimension after max pool is $13*13$ but mine is $12*12$.
+
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[width=0.8\linewidth]{figures/cnn/summary.png}
+  \caption{CNN Summary}
+  \label{fig:cnn_summary}
+\end{figure}
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[width=0.4\linewidth]{figures/cnn/plot.png}
+  \caption{CNN Plot}
+  \label{fig:cnn_plot}
+\end{figure}
+
 
 \item
 Sample QA Questions
 
+Question 1
+\medskip
+
 (a)
 
+all L
 
-\medskip
 
 (b)
 
+L in first layer and S in second layer
 
+(c)
+
+$$
+\beta_1 = cw_1w_5 + cw_2w_6
+$$
+$$
+\beta_2 = cw_3w_5 + cw_4w_6
+$$
+
+Question 2
+\medskip
+
+Firgure \ref{fig:nn}
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[width=0.4\linewidth]{figures/nn.png}
+  \caption{3 Question 2}
+  \label{fig:nn}
+\end{figure}
 
 % ========== Continue adding items as needed
 
