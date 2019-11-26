@@ -31,9 +31,10 @@ def loadData(path):
         content = f.read()
         voc = [w for w in content.split('\n') if w]
 
-    voc = {w: idx for idx, w in enumerate(voc)}
     # ignore last UNK token
     voc = voc[:-1]
+
+    voc = {w: idx for idx, w in enumerate(voc)}
 
     def load_set(set_path):
         bows, labels = [], []
@@ -52,6 +53,20 @@ def loadData(path):
 
 
 def naiveBayesMulFeature_train(xtrain, ytrain):
+    alpha = 1
+
+    labels = [0, 1]
+    voc_size = xtrain.shape[1]
+    label_accum = {l: np.zeros(voc_size) for l in labels}
+
+    for x_vct, y in zip(xtrain, ytrain):
+        label_accum[y] += x_vct
+
+
+    thetaNeg, thetaPos = (
+        (label_accum[l] + alpha) / (label_accum[l].sum() + voc_size * alpha)
+        for l in labels
+    )
 
     return thetaPos, thetaNeg
 
@@ -59,14 +74,25 @@ def naiveBayesMulFeature_train(xtrain, ytrain):
 def naiveBayesMulFeature_test(xtest, ytest,thetaPos, thetaNeg):
     yPredict = []
 
-    return yPredict, Accuracy
+    theta_logs = [np.log(theta) for theta in (thetaPos, thetaNeg)]
+
+    for x_vct in xtest:
+        pos_log, neg_log = [(x_vct * theta_log).sum() for theta_log in theta_logs]
+
+        yPredict.append(1 if pos_log > neg_log else 0)
+
+    yPredict = np.array(yPredict)
+
+    accuracy = (yPredict == ytest).sum() / len(ytest)
+
+    return yPredict, accuracy
 
 
 def naiveBayesMulFeature_sk_MNBC(xtrain, ytrain, xtest, ytest):
-
-    return Accuracy
-
-
+    classifier = MultinomialNB(alpha=1.)
+    classifier.fit(xtrain, ytrain)
+    accuracy = classifier.score(xtest, ytest)
+    return accuracy
 
 
 def naiveBayesBernFeature_train(xtrain, ytrain):
@@ -77,7 +103,7 @@ def naiveBayesBernFeature_train(xtrain, ytrain):
 def naiveBayesBernFeature_test(xtest, ytest, thetaPosTrue, thetaNegTrue):
     yPredict = []
 
-    return yPredict, Accuracy
+    return yPredict, accuracy
 
 
 if __name__ == "__main__":
@@ -95,13 +121,12 @@ if __name__ == "__main__":
     print("thetaNeg =", thetaNeg)
     print("--------------------")
 
-    exit()
 
-    yPredict, Accuracy = naiveBayesMulFeature_test(xtest, ytest, thetaPos, thetaNeg)
-    print("MNBC classification accuracy =", Accuracy)
+    yPredict, accuracy = naiveBayesMulFeature_test(xtest, ytest, thetaPos, thetaNeg)
+    print("MNBC classification accuracy =", accuracy)
 
-    Accuracy_sk = naiveBayesMulFeature_sk_MNBC(xtrain, ytrain, xtest, ytest)
-    print("Sklearn MultinomialNB accuracy =", Accuracy_sk)
+    accuracy_sk = naiveBayesMulFeature_sk_MNBC(xtrain, ytrain, xtest, ytest)
+    print("Sklearn MultinomialNB accuracy =", accuracy_sk)
 
 
     thetaPosTrue, thetaNegTrue = naiveBayesBernFeature_train(xtrain, ytrain)
@@ -109,6 +134,6 @@ if __name__ == "__main__":
     print("thetaNegTrue =", thetaNegTrue)
     print("--------------------")
 
-    yPredict, Accuracy = naiveBayesBernFeature_test(xtest, ytest, thetaPosTrue, thetaNegTrue)
-    print("BNBC classification accuracy =", Accuracy)
+    yPredict, accuracy = naiveBayesBernFeature_test(xtest, ytest, thetaPosTrue, thetaNegTrue)
+    print("BNBC classification accuracy =", accuracy)
     print("--------------------")
