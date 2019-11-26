@@ -3,7 +3,7 @@
 import sys
 import os
 import numpy as np
-from sklearn.naive_bayes import MultinomialNB
+from sklearn.naive_bayes import MultinomialNB, BernoulliNB
 
 ###############################################################################
 
@@ -96,15 +96,49 @@ def naiveBayesMulFeature_sk_MNBC(xtrain, ytrain, xtest, ytest):
 
 
 def naiveBayesBernFeature_train(xtrain, ytrain):
+    alpha = 1
 
+    labels = [0, 1]
+    voc_size = xtrain.shape[1]
+
+    label_counts = {l: 0 for l in labels}
+    label_doc_counts = {l: np.zeros(voc_size) for l in labels}
+
+
+    for x_vct, y in zip(xtrain, ytrain):
+        label_counts[y] += 1
+        label_doc_counts[y] += (x_vct > 0).astype(int)
+
+
+    thetaNegTrue, thetaPosTrue = (
+        (label_doc_counts[l] + alpha) / (label_counts[l] + 2 * alpha)
+        for l in labels
+    )
     return thetaPosTrue, thetaNegTrue
 
 
 def naiveBayesBernFeature_test(xtest, ytest, thetaPosTrue, thetaNegTrue):
     yPredict = []
 
+    for x_vct in (xtest > 0):
+        pos_log, neg_log = [
+            np.log(thetaTrue[x_vct]).sum() + np.log(1 - thetaTrue[~x_vct]).sum()
+            for thetaTrue in [thetaPosTrue, thetaNegTrue]
+        ]
+
+        yPredict.append(1 if pos_log > neg_log else 0)
+
+    yPredict = np.array(yPredict)
+
+    accuracy = (yPredict == ytest).sum() / len(ytest)
+
     return yPredict, accuracy
 
+def naiveBayesBernFeature_sk_BNBC(xtrain, ytrain, xtest, ytest):
+    classifier = BernoulliNB(alpha=1.)
+    classifier.fit(xtrain, ytrain)
+    accuracy = classifier.score(xtest, ytest)
+    return accuracy
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
@@ -137,3 +171,6 @@ if __name__ == "__main__":
     yPredict, accuracy = naiveBayesBernFeature_test(xtest, ytest, thetaPosTrue, thetaNegTrue)
     print("BNBC classification accuracy =", accuracy)
     print("--------------------")
+
+    # accuracy_sk = naiveBayesBernFeature_sk_BNBC(xtrain, ytrain, xtest, ytest)
+    # print("Sklearn BernoulliNB accuracy =", accuracy_sk)
