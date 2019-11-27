@@ -2,46 +2,88 @@
 
 import sys
 import os
+import collections
 import numpy as np
 from sklearn.naive_bayes import MultinomialNB, BernoulliNB
+import nltk
+from nltk.corpus import stopwords
 
 ###############################################################################
 
 VOC_PATH = './dictionary.txt'
 
-def transfer(fileDj, vocabulary):
+stemmer = nltk.stem.PorterStemmer()
+
+def transfer(fileDj, vocabulary, choice=1):
     BOWDj = [0] * len(vocabulary)
     with open(fileDj) as f:
         text = f.read()
 
     for line in text.split('\n'):
         for word in line.split(' '):
-            if word in ['loved', 'loves', 'loving']:
-                word = 'love'
+            if choice == 1:
+                if word in ['loved', 'loves', 'loving']:
+                    word = 'love'
+            else:
+                word = stemmer.stem(word)
 
             if word in vocabulary:
                 BOWDj[vocabulary[word]] += 1
+            elif choice == 2:
+                BOWDj[vocabulary['UNK']] += 1
 
     BOWDj = np.array(BOWDj)
     return BOWDj
 
 
-def loadData(path):
+def build_voc(train_path):
+    counts = collections.Counter()
+
+    min_count = 3
+    stop_set = set(stopwords.words('english'))
+
+    filepaths = []
+    for l_name in ['pos', 'neg']:
+        f_path = os.path.join(train_path, l_name)
+        filepaths += [os.path.join(f_path, fn) for fn in os.listdir(f_path)]
+
+    for fp in filepaths:
+        with open(fp) as f:
+            text = f.read()
+
+        words = nltk.word_tokenize(text)
+        for word in words:
+            word = stemmer.stem(word)
+            if word not in stop_set:
+                counts[word] += 1
+
+    word_list = [w for w, c in counts.items() if c > 3]
+    word_list.append('UNK')
+
+    print('Voc size:', len(word_list))
+    voc = {w: i for i, w in enumerate(word_list)}
+
+    return voc
+
+
+def loadData(path, choice=1):
     with open(VOC_PATH) as f:
         content = f.read()
         voc = [w for w in content.split('\n') if w]
 
-    # ignore last UNK token
-    voc = voc[:-1]
-
-    voc = {w: idx for idx, w in enumerate(voc)}
+    if choice == 1:
+        # ignore last UNK token
+        voc = voc[:-1]
+        voc = {w: idx for idx, w in enumerate(voc)}
+    else:
+        voc = build_voc(os.path.join(path, 'training_set'))
 
     def load_set(set_path):
         bows, labels = [], []
         for l_name in ['pos', 'neg']:
             f_path = os.path.join(set_path, l_name)
             filenames = [fn for fn in os.listdir(f_path)]
-            bows += [transfer(os.path.join(f_path, fn), voc) for fn in filenames]
+            bows += [transfer(os.path.join(f_path, fn), voc, choice) for fn in filenames]
             labels += [1 if l_name == 'pos' else 0] * len(filenames)
 
         return np.array(bows), np.array(labels)
@@ -161,7 +203,6 @@ if __name__ == "__main__":
 
     accuracy_sk = naiveBayesMulFeature_sk_MNBC(xtrain, ytrain, xtest, ytest)
     print("Sklearn MultinomialNB accuracy =", accuracy_sk)
-
 
     thetaPosTrue, thetaNegTrue = naiveBayesBernFeature_train(xtrain, ytrain)
     print("thetaPosTrue =", thetaPosTrue)
