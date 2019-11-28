@@ -10,7 +10,8 @@ from nltk.corpus import stopwords
 
 ###############################################################################
 
-VOC_PATH = './dictionary.txt'
+DIR_PATH = os.path.dirname(__file__)
+VOC_PATH = os.path.join(DIR_PATH, './dictionary.txt')
 
 stemmer = nltk.stem.PorterStemmer()
 
