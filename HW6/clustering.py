@@ -236,25 +236,24 @@ def main():
     dataset1, labels1 = loadData(pathDataset1)
     dataset2, labels2 = loadData(pathDataset2)
 
-    # #Q2,Q3
-    # point_clusters = kmeans(dataset1, 2, max_iter=1000)
+    #Q2,Q3
+    point_clusters = kmeans(dataset1, 2, max_iter=1000)
 
-    # visualizeClusters(dataset1, point_clusters)
+    visualizeClusters(dataset1, point_clusters)
 
+    point_clusters = kmeans(dataset2, 2, max_iter=1000)
+    visualizeClusters(dataset2, point_clusters)
 
-    # point_clusters = kmeans(dataset2, 2, max_iter=1000)
-    # visualizeClusters(dataset2, point_clusters)
+    model = GaussianMixture(2, covariance_type='tied')
+    point_clusters = model.fit_predict(dataset1)
+    visualizeClusters(dataset1, point_clusters)
 
-    # model = GaussianMixture(2, covariance_type='tied')
-    # point_clusters = model.fit_predict(dataset1)
-    # visualizeClusters(dataset1, point_clusters)
+    #Q4
+    kneeFinding(dataset1,range(1,7))
 
-    # #Q4
-    # kneeFinding(dataset1,range(1,7))
-
-    # #Q5
-    # purities = purity(point_clusters, labels1)
-    # print('k-mean purities:', purities)
+    #Q5
+    purities = purity(point_clusters, labels1)
+    print('k-mean purities:', purities)
 
     #Q7
     preds11 = gmmCluster(dataset1, 2, 'diag')

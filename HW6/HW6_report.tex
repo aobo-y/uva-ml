@@ -155,60 +155,80 @@ Sample QA Questions
 
 \medskip
 
-2.1 Bayes Classifier
+2.2 Decision Tree
 
 \medskip
 
 (a)
-From the table
 
 $$
-P(G=1) = \frac{1}{2} ,\;
-P(a=1|G=1) = \frac{1}{2} ,\;
-P(b=1|G=1) = \frac{1}{4}
-$$
-
-$$
-P(G=0) = \frac{1}{2} ,\;
-P(a=1|G=0) = \frac{1}{2} ,\;
-P(b=1|G=0) = \frac{1}{2}
-$$
-
-So
-
-$$
-P(a=1 \land b=1 \land G=1) = P(a=1|G=1)P(b=1|G=1)P(G=1) = \frac{1}{16}
-$$
-
-$$
-P(a=1 \land b=1 \land G=0) = P(a=1|G=1)P(b=1|G=0)P(G=0) = \frac{1}{8}
-$$
-
-$$
-P(a=1 \land b=1) = P(a=1 \land b=1 \land G=1) + P(a=1 \land b=1 \land G=0) = \frac{3}{16}
-$$
-
-$$
-P(G=1|a=1 \land b=1) = \frac{P(a=1 \land b=1 \land G=1)}{P(a=1 \land b=1)} = \frac{1}{3}
+-2 * 0.5 * \log_{2}{0.5} = 1.0
 $$
 
 \medskip
 
 (b)
 
-False, NB is a generative model which gets $p(C|X)$ indirectly through modeling $p(C)$ and $p(X|C)$ while logistic regression is a discriminative model which indeed models $p(C|X)$
+$$
+- 1 * \log_{2}{1} = 0
+$$
 
 \medskip
 
 (c)
 
-False, they assume each feature $p(X_j|cluster==i)$ follows Gaussian distribution not the whole data point $X$.
+$$\begin{aligned}
+  H(E|Color) &= p(Color=G)H(E|Color=G) + p(Color=B)H(E|Color=B)\\
+  &\; + p(Color=R)H(E|Color=R) \\
+  &= 1/3 * 0 + 2/9 * 1.0 + 4/9 * 0 \\
+  &= 0.2222
+\end{aligned}$$
+
+$$\begin{aligned}
+H(E|Wig) &= p(Wig=Y)H(E|Wig=Y) + p(Wig=N)H(E|Wig=N) \\
+&= 2/9 * 1.0 + 7/9 * 0.9852 \\
+&= 0.9885
+\end{aligned}$$
+
+$$\begin{aligned}
+  H(E|Ears) &= p(Ears=2)H(E|Ears=2) + p(Ears=3)H(E|Ears=3) \\
+  &= 8/9 * 1.0 + 1/9 * 0 \\
+  &= 0.8888
+\end{aligned}$$
+
+Since the entropy is lowest when conditioned on Color, color will be chosen.
 
 \medskip
 
 (d)
 
-False, because Gaussian Naive Bayes classifier is a special case of QDA that the covariances are all diagonal matrices, but as long as the covariances are different, the decision boundary is quadratic as QDA.
+The learned decision tree is shown in Figure \ref{fig:dt}
+\begin{figure}[!h]
+  \centering
+  \includegraphics[width=\linewidth]{figures/dt.png}
+  \caption{Decision Tree}
+  \label{fig:dt}
+\end{figure}
+
+\medskip
+
+(e)
+
+The maximum training set error is $$ 50\% $$.
+
+(f)
+
+\begin{center}
+  \begin{tabular}{ |c|c| }
+   \hline
+   Feature 1 & Output \\
+   0 & 0 \\
+   1 & 0 \\
+   0 & 1 \\
+   1 & 1 \\
+   \hline
+  \end{tabular}
+\end{center}
 
 % ========== Continue adding items as needed
 
